@@ -68,5 +68,10 @@ public class QuizController {
 	private List<Quiz> getAllQuizByIdCategorie(@PathVariable("idCategorie") int idCategorie)   
 	{  
 		return qs.getAllQuizByCategorie(idCategorie);  
-	}  
+	}
+	@GetMapping("/quizByIdNiveau/{idNiveau}")
+	private List<Quiz> getAllQuizByIdNiveau(@PathVariable("idNiveau") int idNiveau)
+	{
+		return qs.getAllQuizByNiveaux(idNiveau);
+	}
 }

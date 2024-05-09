@@ -1,11 +1,6 @@
 package com.bezkoder.springjwt.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "questions")
@@ -18,15 +13,21 @@ public class Question {
     @Column(name = "texteQuestion")
     private String texteQuestion;
 
-
-
     @Column(name = "reponseCorrect")
     private String reponseCorrect; // The correct answer for the question
+
+	@ManyToOne(optional = false) // Champ obligatoire
+	@JoinColumn(name = "idQuiz", referencedColumnName = "idQuiz")
+	private Quiz quiz;
 
 	public int getIdQuestion() {
 		return idQuestion;
 	}
 
+	public void setIdQuestion(int idQuestion) {
+		this.idQuestion = idQuestion;
+
+	}
 
 	public String getTexteQuestion() {
 		return texteQuestion;
@@ -46,9 +47,14 @@ public class Question {
 		this.reponseCorrect = reponseCorrect;
 	}
 
-	public void setIdQuestion(int idQuestion) {
-		this.idQuestion = idQuestion;
-		
+	public Quiz getQuiz() {
+		return quiz;
 	}
+
+	public void setQuiz(Quiz quiz) {
+		this.quiz = quiz;
+	}
+
+
    
 }

@@ -16,8 +16,7 @@ public class NiveauxService {
 	@Autowired  
 	NiveauxRepository nR; 
 	
-	@Autowired
-	CategorieRepository cR; 
+
 
 //getting all articles record by using the method findaAll() of CrudRepository  
 public List<Niveaux> getAllNiveaux()   
@@ -46,10 +45,6 @@ public void delete(int id)
 	nR.deleteById(id);  
 } 
 
-public List<Niveaux> getAllNiveauxByCategorie(int idCategorie) {
-    List<Niveaux> Niveaux = new ArrayList<Niveaux>();
-    nR.findAllByCategorie(cR.findById(idCategorie).get()).forEach(f -> Niveaux.add(f));
-    return Niveaux;
-}
+
 
 }

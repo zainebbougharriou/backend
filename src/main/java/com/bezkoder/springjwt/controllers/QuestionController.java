@@ -2,6 +2,7 @@ package com.bezkoder.springjwt.controllers;
 
 import java.util.List;
 
+import com.bezkoder.springjwt.models.Quiz;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,5 +63,10 @@ public class QuestionController {
 		    // Met à jour la catégorie existante
 		    return qs.saveOrUpdate(c);
 		}
+	@GetMapping("/quizByIdQuiz/{idQuiz}")
+	private List<Question> getAllQuestionByIdQuiz(@PathVariable("idQuiz") int idQuiz)
+	{
+		return qs.getAllQuestionByQuiz(idQuiz);
+	}
 
 	}

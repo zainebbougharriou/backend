@@ -24,9 +24,7 @@ public class Niveaux {
     private String imageNiveau;
 
     // Association avec la classe Categorie
-    @ManyToOne
-    @JoinColumn(name = "idCategorie", nullable = false)
-    private Categorie categorie;
+
 
 	public Integer getIdNiveau() {
 		return idNiveau;
@@ -52,18 +50,12 @@ public class Niveaux {
 		this.imageNiveau = imageNiveau;
 	}
 
-	public Categorie getCategorie() {
-		return categorie;
-	}
 
-	public void setCategorie(Categorie categorie) {
-		this.categorie = categorie;
-	}
 
 	@Override
 	public String toString() {
 		return "Niveaux [idNiveau=" + idNiveau + ", nomNiveau=" + nomNiveau + ", imageNiveau=" + imageNiveau
-				+ ", categorie=" + categorie + "]";
+				+  "]";
 	}
     
     

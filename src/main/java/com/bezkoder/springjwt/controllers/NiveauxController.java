@@ -59,9 +59,5 @@ public class NiveauxController {
 		    // Met à jour la catégorie existante
 		    return ns.saveOrUpdate(c);
 		}
-		@GetMapping("/NiveauxByIdCategorie/{idCategorie}")
-		private List<Niveaux> getAllNiveauxByIdCategorie(@PathVariable("idCategorie") int idCategorie)   
-		{  
-			return ns.getAllNiveauxByCategorie(idCategorie);  
-		}  
+
 	}

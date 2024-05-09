@@ -3,6 +3,8 @@ package com.bezkoder.springjwt.security.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bezkoder.springjwt.models.Quiz;
+import com.bezkoder.springjwt.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,9 @@ import com.bezkoder.springjwt.repository.QuestionRepository;
 public class QuestionService {
 
 	@Autowired  
-	QuestionRepository qR; 
+	QuestionRepository qR;
 
-
+	QuizRepository qzR;
 //getting all articles record by using the method findaAll() of CrudRepository  
 public List<Question> getAllQuestion()   
 {  
@@ -41,6 +43,11 @@ public Question saveOrUpdate(Question r)
 public void delete(int id)   
 {  
 	qR.deleteById(id);  
-} 
+}
+	public List<Question> getAllQuestionByQuiz(int idQuiz) {
+		List<Question> questionList = new ArrayList<Question>();
+		qR.findAllByQuiz(qzR.findById(idQuiz).get()).forEach(f -> questionList.add(f));
+		return questionList;
+	}
 
 }

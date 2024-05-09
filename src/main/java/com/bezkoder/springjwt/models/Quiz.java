@@ -23,7 +23,9 @@ public class Quiz {
 	@ManyToOne(optional = false) // Champ obligatoire
     @JoinColumn(name = "idCategorie", referencedColumnName = "idCategorie")
     private Categorie categorie;
-
+	@ManyToOne(optional = false) // Champ obligatoire
+	@JoinColumn(name = "idNiveau", referencedColumnName = "idNiveau")
+	private Niveaux niveaux;
 	public int getIdQuiz() {
 		return idQuiz;
 	}
@@ -46,6 +48,14 @@ public class Quiz {
 
 	public void setCategorie(Categorie categorie) {
 		this.categorie = categorie;
+	}
+
+	public Niveaux getNiveaux() {
+		return niveaux;
+	}
+
+	public void setNiveaux(Niveaux niveaux) {
+		this.niveaux = niveaux;
 	}
 
 	@Override
