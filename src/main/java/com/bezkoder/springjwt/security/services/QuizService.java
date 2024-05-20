@@ -1,12 +1,11 @@
 package com.bezkoder.springjwt.security.services;
 
-import com.bezkoder.springjwt.models.Niveaux;
 import com.bezkoder.springjwt.models.Quiz;
-import com.bezkoder.springjwt.models.Categorie;
 import com.bezkoder.springjwt.repository.NiveauxRepository;
 import com.bezkoder.springjwt.repository.QuizRepository;
 import com.bezkoder.springjwt.repository.CategorieRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,11 @@ public class QuizService {
 //getting all articles record by using the method findaAll() of CrudRepository  
 public List<Quiz> getAllQuiz()   
 {  
-	List<Quiz> Quiz = new ArrayList<Quiz>();  
-	qR.findAll().forEach(r -> Quiz.add(r));  
-	return Quiz;  	
+	List<Quiz> quizList = new ArrayList<Quiz>();
+	qR.findAll().forEach(quizList::add);
+	quizList.sort(Comparator.comparing(Quiz::getNomQuiz));
+
+	return quizList;
 }  
 
 //getting a specific record by using the method findById() of CrudRepository  

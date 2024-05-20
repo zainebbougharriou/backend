@@ -15,8 +15,8 @@ public class Categorie {
 	
 	@Column(name = "nomCategorie")
 	private String nomCategorie;
-	
-	@Column(name= "imageCategorie")
+
+	@Column(name= "imageCategorie", columnDefinition = "LONGTEXT")
 	private String imageCategorie;
 
 

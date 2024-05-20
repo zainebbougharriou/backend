@@ -1,19 +1,14 @@
 package com.bezkoder.springjwt.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bezkoder.springjwt.controllers.dto.QuizDTO;
+import com.bezkoder.springjwt.models.Question;
+import com.bezkoder.springjwt.security.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bezkoder.springjwt.models.Categorie;
 import com.bezkoder.springjwt.models.Quiz;
 import com.bezkoder.springjwt.security.services.QuizService;
 
@@ -26,13 +21,20 @@ import com.bezkoder.springjwt.security.services.QuizService;
 public class QuizController {
 	//autowire the ArticleService class  
 	@Autowired  
-	QuizService qs; 
+	QuizService qs;
+
+	@Autowired
+	QuestionService questionService;
 	//creating a get mapping that retrieves all the Article detail from the database   
 	@GetMapping("/Quiz")
-	private List<Quiz> getAllQuiz()   
-	{  
-		return qs.getAllQuiz();  
-	}  
+	public List<QuizDTO> getAllQuiz() {
+		List<QuizDTO> quizDTOs = new ArrayList<>();
+		List<Quiz> quizzes = qs.getAllQuiz();
+		for (Quiz quiz : quizzes) {
+			quizDTOs.add(QuizDTO.map(quiz));
+		}
+		return quizDTOs;
+	}
 
 	//creating a get mapping that retrieves the detail of a specific article  
 	@GetMapping("/Quiz/{id}")  
@@ -54,7 +56,26 @@ public class QuizController {
 	{  
 		  
 		return  qs.saveOrUpdate(c);
-	} 
+	}
+
+	@PostMapping("/setQuestion/{id}")
+	private void saveQuiz(@PathVariable("id") int id , @RequestParam("idQuestion") Integer idQuestion)
+	{
+		if (idQuestion == null){
+			return ;
+		}
+		Question question = questionService.getQuestionById(idQuestion);
+			if(question == null){
+				return ;
+			}
+		Quiz quiz = qs.getQuizById(id);
+			if(quiz == null){
+				return;
+			}
+			quiz.getQuestions().add(question);
+		  qs.saveOrUpdate(quiz);
+	}
+
 
 	//creating put mapping that updates the article detail
 	@PutMapping("/Quiz/{id}")
