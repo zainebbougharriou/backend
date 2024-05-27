@@ -2,7 +2,9 @@ package com.bezkoder.springjwt.controllers;
 
 import java.util.List;
 
+import com.bezkoder.springjwt.controllers.dto.QuestionDTO;
 import com.bezkoder.springjwt.models.Quiz;
+import com.bezkoder.springjwt.security.services.PropositionService;
 import com.bezkoder.springjwt.security.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +30,8 @@ public class QuestionController {
 		@Autowired  
 		QuestionService qs;
 		@Autowired
+		PropositionService propositionService;
+		@Autowired
 		QuizService quizService;
 		//creating a get mapping that retrieves all the Article detail from the database   
 		@GetMapping("/Question")
@@ -41,14 +45,20 @@ public class QuestionController {
 		private Question getQuestion(@PathVariable("id") int id)   
 		{  
 			return qs.getQuestionById(id);  
-		}  
+		}
 
-		//creating a delete mapping that deletes a specified article  
+		@GetMapping("/QuestionProposition/{id}")
+		private QuestionDTO getQuestionAndProposition(@PathVariable("id") int id) {
+		return propositionService.getPropositionByIdQuestion(id);
+	}
+
+
+	//creating a delete mapping that deletes a specified article
 		@DeleteMapping("/Question/{id}")  
 		private void deleteQuestion(@PathVariable("id") int id)   
 		{  
 			qs.delete(id);  
-		} 
+		}
 
 		//create new article
 		@PostMapping("/Question/{quizId}")

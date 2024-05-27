@@ -1,5 +1,6 @@
 package com.bezkoder.springjwt.security.services;
 
+import com.bezkoder.springjwt.controllers.dto.QuestionDTO;
 import com.bezkoder.springjwt.models.Proposition;
 import com.bezkoder.springjwt.repository.PropositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,4 +41,16 @@ public class PropositionService {
         pR.deleteById(id);
     }
 
+    public QuestionDTO getPropositionByIdQuestion(int id) {
+
+        List<Proposition> propositionList = pR.findByQuestionIdQuestion(id);
+
+      return QuestionDTO.map(propositionList) ;
+
+    }
+
+    public  List<Proposition> getPropositionByIdQuestionAsList(int id) {
+        return pR.findByQuestionIdQuestion(id);
+
+    }
 }

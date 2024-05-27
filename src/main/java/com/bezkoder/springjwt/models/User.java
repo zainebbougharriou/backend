@@ -1,5 +1,7 @@
 package com.bezkoder.springjwt.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,12 +26,19 @@ public class User {
 	private String username;
 
 	@NotBlank
+	private String name;
+
+	@NotBlank
 	@Size(max = 50)
 	@Email
 	private String email;
 
 	@NotBlank
 	private String password;
+
+	private Boolean isActive;
+
+	private Date creationDate;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
@@ -44,6 +53,30 @@ public class User {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Boolean getActive() {
+		return isActive == null || isActive;
+	}
+
+	public void setActive(Boolean active) {
+		isActive = active;
+	}
+
+	public @NotBlank String getName() {
+		return name;
+	}
+
+	public void setName(@NotBlank String name) {
+		this.name = name;
 	}
 
 	public Long getId() {
@@ -85,4 +118,18 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	public String getFormattedDateHeure() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		return formatter.format(this.creationDate);
+	}
+
+
+	@PrePersist
+	private void prePersistEntity() {
+		if (getCreationDate() == null) {
+			setCreationDate(new Date());
+		}
+	}
+
 }

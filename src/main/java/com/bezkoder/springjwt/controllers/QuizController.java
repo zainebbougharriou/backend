@@ -36,6 +36,17 @@ public class QuizController {
 		return quizDTOs;
 	}
 
+	@GetMapping("/Quiz/{idCategory}/{idLevel}")
+	public List<QuizDTO> getAllQuiz(@PathVariable("idCategory") int idCategory ,@PathVariable("idLevel") int idLevel  ) {
+
+		List<QuizDTO> quizDTOs = new ArrayList<>();
+		List<Quiz> quizzes = qs.getAllQuizByCategoryIdAndNiveaux(idCategory , idLevel);
+		for (Quiz quiz : quizzes) {
+			quizDTOs.add(QuizDTO.map(quiz));
+		}
+		return quizDTOs;
+	}
+
 	//creating a get mapping that retrieves the detail of a specific article  
 	@GetMapping("/Quiz/{id}")  
 	private Quiz getQuiz(@PathVariable("id") int id)   

@@ -1,6 +1,5 @@
 package com.bezkoder.springjwt.repository;
 
-import com.bezkoder.springjwt.models.Niveaux;
 import com.bezkoder.springjwt.models.Quiz;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,6 +1,10 @@
 package com.bezkoder.springjwt.controllers.dto;
 
+import com.bezkoder.springjwt.models.Question;
 import com.bezkoder.springjwt.models.Quiz;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class QuizDTO {
     private  Integer idQuiz;
@@ -10,6 +14,7 @@ public class QuizDTO {
     private  String nameNiveau;
     private  String imageNiveau;
     private Integer countQuestions;
+    private List<Integer> questionIds;
 
     public QuizDTO() {
     }
@@ -26,8 +31,20 @@ public class QuizDTO {
         quizDTO.setNameNiveau( quiz.getNiveaux().getNomNiveau());
         quizDTO.setImageNiveau( quiz.getNiveaux().getImageNiveau());
         quizDTO.setCountQuestions(  quiz.getQuestions().size());
+        List<Integer> questionIds = quiz.getQuestions().stream()
+                .map(Question::getIdQuestion)
+                .collect(Collectors.toList());
 
+        quizDTO.setQuestionIds(questionIds);
         return quizDTO ;
+    }
+
+    public List<Integer> getQuestionIds() {
+        return questionIds;
+    }
+
+    public void setQuestionIds(List<Integer> questionIds) {
+        this.questionIds = questionIds;
     }
 
     public Integer getIdQuiz() {

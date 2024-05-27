@@ -1,9 +1,14 @@
 package com.bezkoder.springjwt.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.bezkoder.springjwt.models.Role;
+import com.bezkoder.springjwt.payload.request.SignupRequest;
+import com.bezkoder.springjwt.payload.response.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +68,10 @@ public class AuthController {
 				new UsernamePasswordAuthenticationToken(username, password));
 		 User authenticatedUser = userRepository.findByUsername(username).get();
 
+		if (authenticatedUser.getActive() != null && !authenticatedUser.getActive()){
+			throw new UsernameNotFoundException("Votre Compte est désactiver");
+		}
+
 		if (authenticatedUser == null) {
 			throw new UsernameNotFoundException("Username " + username + "not found");
 		}
@@ -79,33 +87,37 @@ public class AuthController {
 		);
 	}
 
-//		@PostMapping("/signup")
-//	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-//		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-//			return ResponseEntity
-//					.badRequest()
-//					.body(new MessageResponse("Error: Username is already taken!"));
-//		}
-//
-//		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-//			return ResponseEntity
-//					.badRequest()
-//					.body(new MessageResponse("Error: Email is already in use!"));
-//		}
-//
-//		// Create new user's account
-//		User user = new User(signUpRequest.getUsername(),
-//							 signUpRequest.getEmail(),
-//							 encoder.encode(signUpRequest.getPassword()));
-//
-//		Set<String> strRoles = signUpRequest.getRole();
-//		Set<Role> roles = new HashSet<>();
-//
-//		if (strRoles == null) {
-//			Role userRole = roleRepository.findByName(Role.ERole.ROLE_DEVELOPPEUR)
-//					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//			roles.add(userRole);
-//		} else {
+		@PostMapping("/signup")
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Username is already taken!"));
+		}
+
+		if(!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())){
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Password or ConfirmPassword in not valid!"));
+		}
+
+
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String hashedPassword = passwordEncoder.encode(signUpRequest.getPassword());
+		// Create new user's account
+		User user = new User(signUpRequest.getUsername(),
+							 signUpRequest.getUsername(),
+							"{bcrypt}"+hashedPassword);
+
+	//	Set<String> strRoles = null;
+		Set<Role> roles = new HashSet<>();
+
+	//	if (strRoles == null) {
+			Role userRole = roleRepository.findByName(Role.ERole.ROLE_DEVELOPPEUR)
+					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+			roles.add(userRole);
+	//	}
+//		else {
 //			strRoles.forEach(role -> {
 //				switch (role) {
 //				case "administrateur":
@@ -121,12 +133,14 @@ public class AuthController {
 //				}
 //			});
 //		}
-//
-//		user.setRoles(roles);
-//		userRepository.save(user);
-//
-//		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-//	}
+
+		user.setRoles(roles);
+		user.setName(signUpRequest.getName());
+		user.setActive(false);
+		userRepository.save(user);
+
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
 	
 //	@PostMapping("/changerMotDePasse")
 //	public ResponseEntity<?> changerMotDePasse(@Valid @RequestBody ChangerMotDePasseDto changerMotDePasseDto) {

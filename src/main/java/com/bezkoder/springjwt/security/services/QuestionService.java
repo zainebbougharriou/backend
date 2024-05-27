@@ -16,7 +16,7 @@ public class QuestionService {
 
 	@Autowired  
 	QuestionRepository qR;
-
+	@Autowired
 	QuizRepository qzR;
 //getting all articles record by using the method findaAll() of CrudRepository  
 public List<Question> getAllQuestion()   
