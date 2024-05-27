@@ -2,6 +2,8 @@ package com.bezkoder.springjwt.controllers;
 
 import java.util.List;
 
+import com.bezkoder.springjwt.models.*;
+import com.bezkoder.springjwt.security.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.springjwt.models.Categorie;
-import com.bezkoder.springjwt.security.services.CategorieService;
+import javax.transaction.Transactional;
 
 
-
-//mark class as Controller  
+//mark class as Controller
 @RestController
 @RequestMapping("/cat")
 @CrossOrigin(origins = "*")
@@ -26,7 +26,15 @@ import com.bezkoder.springjwt.security.services.CategorieService;
 public class CategorieController {
 	//autowire the ArticleService class  
 	@Autowired  
-	CategorieService cs; 
+	CategorieService cs;
+	@Autowired
+	QuizService quizService;
+	@Autowired
+	QuestionService questionService;
+	@Autowired
+	PropositionService propositionService;
+	@Autowired
+	HistoriqueService historiqueService;
 	//creating a get mapping that retrieves all the Article detail from the database   
 	@GetMapping("/Categorie")
 	private List<Categorie> getAllCategories()   
@@ -42,11 +50,23 @@ public class CategorieController {
 	}  
 
 	//creating a delete mapping that deletes a specified article  
-	@DeleteMapping("/Categorie/{id}")  
-	private void deleteCategorie(@PathVariable("id") int id)   
-	{  
-		cs.delete(id);  
-	} 
+	@Transactional
+	@DeleteMapping("/Categorie/{id}")
+	private List<Categorie> deleteCategorie(@PathVariable("id") int id) {
+
+		Categorie categorie = cs.getCategoriesById(id);
+		List<Quiz> quiz = quizService.getAllQuizByCategorie(categorie.getIdCategorie());
+		quiz.forEach(q -> {
+			quizService.updateQuizQuestionReferences(q.getIdQuiz());
+			historiqueService.deleteHistoriqueByQuizId(q.getIdQuiz());
+			quizService.delete(q.getIdQuiz());
+		});
+
+
+		cs.delete(categorie.getIdCategorie());
+
+		return getAllCategories();
+	}
 
 	//create new article
 	@PostMapping("/Categorie")  

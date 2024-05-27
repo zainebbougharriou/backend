@@ -1,6 +1,6 @@
 package com.bezkoder.springjwt.payload.response;
 
-import java.util.List;
+import com.bezkoder.springjwt.models.Role;
 
 public class JwtResponse {
 	private String token;
@@ -8,14 +8,14 @@ public class JwtResponse {
 	private Long id;
 	private String username;
 	private String email;
-	private List<String> roles;
+	private String roles;
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, Long id, String username, String email, Role roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
-		this.roles = roles;
+		this.roles = roles.getName().toString();
 	}
 
 	public String getAccessToken() {
@@ -58,7 +58,7 @@ public class JwtResponse {
 		this.username = username;
 	}
 
-	public List<String> getRoles() {
+	public String getRoles() {
 		return roles;
 	}
 }

@@ -1,13 +1,7 @@
 package com.bezkoder.springjwt.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
+import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -26,6 +20,18 @@ public class Quiz {
 	@ManyToOne(optional = false) // Champ obligatoire
 	@JoinColumn(name = "idNiveau", referencedColumnName = "idNiveau")
 	private Niveaux niveaux;
+
+	@OneToMany
+	private List<Question> questions ;
+
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
 	public int getIdQuiz() {
 		return idQuiz;
 	}

@@ -1,8 +1,8 @@
 package com.bezkoder.springjwt.models;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 @Table(name = "historique")
@@ -13,10 +13,10 @@ public class Historique {
     private int idHistorique;
 
     @Column(name = "score")
-    private int score;
+    private String score;
 
     @Column(name = "dateHeure")
-    private LocalDateTime dateHeure;
+    private Date dateHeure;
 
     @Column(name = "temps")
     private int temps;
@@ -38,19 +38,19 @@ public class Historique {
 		this.idHistorique = idHistorique;
 	}
 
-	public int getScore() {
+	public String getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 
-	public LocalDateTime getDateHeure() {
+	public Date getDateHeure() {
 		return dateHeure;
 	}
 
-	public void setDateHeure(LocalDateTime dateHeure) {
+	public void setDateHeure(Date dateHeure) {
 		this.dateHeure = dateHeure;
 	}
 
@@ -79,13 +79,8 @@ public class Historique {
 	}
 	// Utilitaire pour formater la date et l'heure
     public String getFormattedDateHeure() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return this.dateHeure.format(formatter);
-    }
-
-    // Utilitaire pour obtenir le score en tant que chaîne
-    public String getFormattedScore() {
-        return String.format("%d%%", this.score);
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		return formatter.format(this.dateHeure);
     }
 
     // Utilitaire pour obtenir le temps sous forme de "X minutes, Y secondes"

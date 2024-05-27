@@ -55,4 +55,12 @@ public class HistoriqueService {
         }
         return (int) ((double) correctAnswers / questions.size() * 100);
     }
+
+    public void deleteHistoriqueByQuizId(int idQuiz) {
+        List<Historique>  historiqueList = historiqueRepository.findByQuizIdQuiz(idQuiz);
+        historiqueList.forEach(h-> {
+            h.setUtilisateur(null);
+            historiqueRepository.deleteById(h.getIdHistorique());
+        });
+    }
 }

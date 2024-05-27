@@ -28,9 +28,23 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+	public AuthTokenFilter(JwtUtils jwtUtils, UserDetailsServiceImpl userDetailsService) {
+		this.jwtUtils = jwtUtils;
+		this.userDetailsService= userDetailsService;
+
+	}
+
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+
+		String requestedUrl = ((HttpServletRequest) request).getRequestURI();
+
+		if (!requestedUrl.endsWith("logout") && requestedUrl.startsWith("/api/auth")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {

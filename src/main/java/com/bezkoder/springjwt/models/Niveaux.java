@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,11 +18,22 @@ public class Niveaux {
     @Column(name = "nomNiveau")
     private String nomNiveau;
 
-    @Column(name = "imageNiveau")
+    @Column(name = "imageNiveau" , columnDefinition = "LONGTEXT" )
     private String imageNiveau;
+
+	@Column(name = "priorityNiveau")
+	private Integer priorityNiveau;
 
     // Association avec la classe Categorie
 
+
+	public Integer getPriorityNiveau() {
+		return priorityNiveau;
+	}
+
+	public void setPriorityNiveau(Integer priorityNiveau) {
+		this.priorityNiveau = priorityNiveau;
+	}
 
 	public Integer getIdNiveau() {
 		return idNiveau;

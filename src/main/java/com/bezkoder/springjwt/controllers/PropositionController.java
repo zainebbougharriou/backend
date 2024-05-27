@@ -1,6 +1,8 @@
 package com.bezkoder.springjwt.controllers;
 import com.bezkoder.springjwt.models.Proposition;
+import com.bezkoder.springjwt.models.Question;
 import com.bezkoder.springjwt.security.services.PropositionService;
+import com.bezkoder.springjwt.security.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,9 @@ import java.util.List;
 public class PropositionController {
     @Autowired
     PropositionService ps;
+
+    @Autowired
+    QuestionService questionService;
     //creating a get mapping that retrieves all the Article detail from the database
     @GetMapping("/Proposition")
     private List<Proposition> getAllProposition()
@@ -34,11 +39,18 @@ public class PropositionController {
     }
 
     //create new article
-    @PostMapping("/Proposition")
-    private Proposition saveProposition(@RequestBody Proposition c)
+    @PostMapping("/Proposition/{questionId}")
+    private Integer saveProposition(@PathVariable("questionId") int questionId , @RequestBody Proposition c)
     {
 
-        return  ps.saveOrUpdate(c);
+        Question question = questionService.getQuestionById(questionId);
+        if(question == null){
+            return null ;
+        }
+        c.setQuestion(question);
+        Proposition proposition = ps.saveOrUpdate(c);
+        return question.getIdQuestion();
+
     }
 
     //creating put mapping that updates the article detail
