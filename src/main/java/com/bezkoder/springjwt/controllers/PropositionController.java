@@ -1,9 +1,11 @@
 package com.bezkoder.springjwt.controllers;
+import com.bezkoder.springjwt.controllers.dto.UpdatePropositionDTO;
 import com.bezkoder.springjwt.models.Proposition;
 import com.bezkoder.springjwt.models.Question;
 import com.bezkoder.springjwt.security.services.PropositionService;
 import com.bezkoder.springjwt.security.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,12 +56,14 @@ public class PropositionController {
     }
 
     //creating put mapping that updates the article detail
-    @PutMapping("/Proposition/{id}")
-    private Proposition update(@PathVariable int id, @RequestBody Proposition c) {
-        // Définissez l'identifiant de la catégorie avec la valeur de l'identifiant du chemin
-        c.setIdProp(id);
-        // Met à jour la catégorie existante
-        return ps.saveOrUpdate(c);
+    @PostMapping("/Proposition")
+    private void update(@RequestBody UpdatePropositionDTO updatePropositionDTO) {
+
+        Proposition proposition = ps.getPropositionById(updatePropositionDTO.getId());
+        if(!StringUtils.isEmpty(updatePropositionDTO.getTextProposition())){
+            proposition.setTexteProp(updatePropositionDTO.getTextProposition());
+        }
+        ps.saveOrUpdate(proposition);
     }
 
 }

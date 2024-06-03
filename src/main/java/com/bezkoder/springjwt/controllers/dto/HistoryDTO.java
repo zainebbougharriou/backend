@@ -10,6 +10,7 @@ public class HistoryDTO {
     private  String nomNiveau;
     private  String imageNiveau;
     private  String imageCategorie;
+    private  Integer temps;
 
 
     public HistoryDTO() {
@@ -21,15 +22,24 @@ public class HistoryDTO {
         }
         HistoryDTO questionDTO = new HistoryDTO();
             questionDTO.setDateHeure(historiques.getFormattedDateHeure());
-            questionDTO.setUserName(historiques.getUtilisateur().getUsername());
+            questionDTO.setUserName(historiques.getUtilisateur().getName());
             questionDTO.setScore(historiques.getScore());
             questionDTO.setNomCategorie(historiques.getQuiz().getCategorie().getNomCategorie());
             questionDTO.setNomNiveau(historiques.getQuiz().getNiveaux().getNomNiveau());
             questionDTO.setNomQuiz(historiques.getQuiz().getNomQuiz());
             questionDTO.setImageCategorie(historiques.getQuiz().getCategorie().getImageCategorie());
             questionDTO.setImageNiveau(historiques.getQuiz().getNiveaux().getImageNiveau());
+            questionDTO.setTemps(historiques.getTemps());
 
         return questionDTO ;
+    }
+
+    public Integer getTemps() {
+        return temps;
+    }
+
+    public void setTemps(Integer temps) {
+        this.temps = temps;
     }
 
     public String getImageNiveau() {

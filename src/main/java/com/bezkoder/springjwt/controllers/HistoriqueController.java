@@ -36,7 +36,7 @@ public class HistoriqueController {
 
         User user = userRepository.findByUsername(SpringBootSecurityJwtApplication.getCurrentUser().getUsername()).get();
 
-        if (user != null && user.getRoles().contains(new Role(Role.ERole.ROLE_DEVELOPPEUR))) {
+        if (user != null && user.getRoles().stream().anyMatch(role -> role.getName().equals(Role.ERole.ROLE_DEVELOPPEUR))) {
             return historiqueList.stream()
                     .filter(h -> Objects.equals(h.getUtilisateur().getId(), user.getId()))
                     .map(HistoryDTO::map)
@@ -68,6 +68,7 @@ public class HistoriqueController {
             historique.setQuiz(quiz);
             historique.setUtilisateur(user);
             historique.setScore(historyRequestDTO.getScore());
+            historique.setTemps(historyRequestDTO.getTemps());
 
         return historiqueService.saveOrUpdate(historique);
     }
