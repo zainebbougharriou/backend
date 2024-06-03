@@ -3,19 +3,14 @@ package com.bezkoder.springjwt.controllers;
 import java.util.List;
 
 import com.bezkoder.springjwt.controllers.dto.QuestionDTO;
+import com.bezkoder.springjwt.controllers.dto.UpdateQuestionDTO;
+import com.bezkoder.springjwt.models.Proposition;
 import com.bezkoder.springjwt.models.Quiz;
 import com.bezkoder.springjwt.security.services.PropositionService;
 import com.bezkoder.springjwt.security.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import com.bezkoder.springjwt.models.Question;
 import com.bezkoder.springjwt.security.services.QuestionService;
@@ -52,11 +47,22 @@ public class QuestionController {
 		return propositionService.getPropositionByIdQuestion(id);
 	}
 
+	@GetMapping("/QuestionProposition/quiz/{idQuiz}")
+	private List<QuestionDTO> getQuestionAndPropositionByQuiz(@PathVariable("idQuiz") int idQuiz) {
+		return propositionService.getQuestionAndPropositionByQuiz(idQuiz);
+	}
+
 
 	//creating a delete mapping that deletes a specified article
 		@DeleteMapping("/Question/{id}")  
 		private void deleteQuestion(@PathVariable("id") int id)   
-		{  
+		{
+			Question question = qs.getQuestionById(id);
+			 Quiz quiz =question.getQuiz();
+			 quiz.getQuestions().remove(question);
+			 quizService.saveOrUpdate(quiz);
+			List<Proposition> propositions = propositionService.getPropositionByIdQuestionAsList(id);
+			propositions.forEach(proposition -> propositionService.delete(proposition.getIdProp()));
 			qs.delete(id);  
 		}
 
@@ -74,13 +80,15 @@ public class QuestionController {
 		}
 
 	//creating put mapping that updates the article detail
-		@PutMapping("/Question/{id}")
-		private Question update(@PathVariable int id, @RequestBody Question c) {
-		    // Définissez l'identifiant de la catégorie avec la valeur de l'identifiant du chemin
-		    c.setIdQuestion(id);
-		    // Met à jour la catégorie existante
-		    return qs.saveOrUpdate(c);
+	@PostMapping("/Question")
+	private void update(@RequestBody UpdateQuestionDTO questionDTO) {
+
+		Question question = qs.getQuestionById(questionDTO.getId());
+		if(!StringUtils.isEmpty(questionDTO.getTextQ())){
+			question.setTexteQuestion(questionDTO.getTextQ());
 		}
+		 qs.saveOrUpdate(question);
+	}
 	@GetMapping("/quizByIdQuiz/{idQuiz}")
 	private List<Question> getAllQuestionByIdQuiz(@PathVariable("idQuiz") int idQuiz)
 	{
