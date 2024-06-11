@@ -8,4 +8,6 @@ import com.bezkoder.springjwt.models.Categorie;
 
 public interface CategorieRepository extends CrudRepository<Categorie, Integer>{
 
+    Categorie findByNomCategorie(String nomCategorie);
+
 }

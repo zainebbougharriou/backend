@@ -29,8 +29,11 @@ public List<Categorie> getAllCategories()
 public Categorie getCategoriesById(int id)   
 {  
 	return cR.findById(id).get();  
-}  
+}
 
+public Categorie findCategorieByNom(String nomCategorie) {
+	return cR.findByNomCategorie(nomCategorie);
+}
 
 //saving a specific record by using the method save() of CrudRepository  
 public Categorie saveOrUpdate(Categorie r)   

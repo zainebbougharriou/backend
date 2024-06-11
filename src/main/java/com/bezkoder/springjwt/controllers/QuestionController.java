@@ -63,7 +63,11 @@ public class QuestionController {
 			 quizService.saveOrUpdate(quiz);
 			List<Proposition> propositions = propositionService.getPropositionByIdQuestionAsList(id);
 			propositions.forEach(proposition -> propositionService.delete(proposition.getIdProp()));
-			qs.delete(id);  
+			qs.delete(id);
+
+			if(quiz.getQuestions().isEmpty()){
+				quizService.delete(quiz.getIdQuiz());
+			}
 		}
 
 		//create new article
