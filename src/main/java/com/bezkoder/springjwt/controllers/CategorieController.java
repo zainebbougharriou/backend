@@ -71,10 +71,14 @@ public class CategorieController {
 	//create new article
 	@PostMapping("/Categorie")  
 	private Categorie saveCategorie(@RequestBody Categorie c)   
-	{  
-		  
+	{
+
+		Categorie categorie = cs.findCategorieByNom(c.getNomCategorie());
+		if (categorie == null){
+			throw new RuntimeException("Categories déja existe");
+		}
 		return  cs.saveOrUpdate(c);
-	} 
+	}
 
 	//creating put mapping that updates the article detail
 	@PutMapping("/Categorie/{id}")
